@@ -3,14 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multi-Agent Guide - Jamie Cole</title>
-<meta http-equiv="refresh" content="0;url=docs/index.html">
+<title>Running 10 Claude Code Agents in Parallel - Production Guide</title>
 <style>
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 640px; margin: 60px auto; padding: 20px; color: #1a1a1a; line-height: 1.6; }
-a { color: #0066cc; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 640px; margin: 0; padding: 0; color: #1a1a1a; line-height: 1.6; }
+.hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 20px; text-align: center; }
+.hero h1 { margin: 0 0 20px 0; font-size: 1.8em; }
+.hero p { margin: 0 0 30px 0; font-size: 1.1em; opacity: 0.95; }
+.container { max-width: 640px; margin: 0 auto; padding: 40px 20px; }
+.cta-btn { display: inline-block; background: #667eea; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 1.1em; }
+.cta-btn:hover { background: #5568d3; }
+h2 { margin-top: 40px; }
+.features { margin: 30px 0; }
+.features li { margin: 12px 0; }
+.price { font-size: 2.5em; margin: 30px 0 20px 0; }
+.badge { display: inline-block; background: #f0f0f0; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; margin-bottom: 20px; }
+hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
+.faq { background: #f9f9f9; padding: 20px; border-radius: 6px; margin: 20px 0; }
+.faq h3 { margin-top: 0; }
 </style>
 </head>
 <body>
-<p>Redirecting to download page... <a href="docs/index.html">Click here if not redirected.</a></p>
+
+<div class="hero">
+<h1>Running 10 Claude Code Agents in Parallel</h1>
+<p>Battle notes from 130 heartbeats of production multi-agent systems</p>
+<p style="font-size: 0.9em; opacity: 0.9;">What actually breaks. What actually works.</p>
+</div>
+
+<div class="container">
+
+<div style="text-align: center;">
+<div class="badge">Not tutorials. Real production patterns.</div>
+<p>You've spawned multiple Claude Code agents. Now they're running simultaneously. Your state is corrupting. Agents are stepping on each other's files. You have no visibility into what's stuck. You don't know how many to spawn before everything collapses.</p>
+
+<p>This guide is notes from running 8-12 agents continuously for 130+ heartbeats on real work, in a Docker container, on a MacBook Pro. Some embarrassing. All real.</p>
+
+<div class="price">£19</div>
+<a href="https://buy.stripe.com/9B68wJ6oH8tL2jR6xA9ws05" class="cta-btn">Get the Guide</a>
+
+</div>
+
+<hr>
+
+<h2>What you'll learn</h2>
+<ul class="features">
+<li><strong>Slot budgets</strong> — allocate agent slots before spawning. Forces you to think about the tree, not react to chaos.</li>
+<li><strong>The progress.md protocol</strong> — one-line status every 10 minutes. Parent checks once per heartbeat. Stuck agents caught in 30 minutes, not 3 days.</li>
+<li><strong>The meta-orchestrator pattern</strong> — hierarchy of agent types. Root orchestrator doesn't touch tactical work. Each level manages the layer below.</li>
+<li><strong>Shared state without race conditions</strong> — atomic writes, versioned state, conflict detection. Not theoretical. Real patterns from 130 heartbeats.</li>
+<li><strong>Visibility architecture</strong> — how to know what 10 agents are actually doing without polling them every 5 seconds.</li>
+<li><strong>Failure modes nobody talks about</strong> — context gets consumed and you don't notice. Agents write to the same files. Dead agents keep writing progress updates. Cascading failures you can't see.</li>
+</ul>
+
+<hr>
+
+<h2>What you get</h2>
+<p>2000-word guide + 4 bootstrap templates (AGENTS.md, HEARTBEAT.md, ROLE_TEMPLATE.md, SOUL.md) as an instant ZIP download.</p>
+
+<p>Read it in 15 minutes. The templates get you started in another 10.</p>
+
+<hr>
+
+<h2>Questions?</h2>
+
+<div class="faq">
+<h3>Is this tutorial level or production level?</h3>
+<p>Production. 130+ real heartbeats running 8-12 agents. Not best practices, not theory. What broke. What worked.</p>
+</div>
+
+<div class="faq">
+<h3>Do I need Claude Code?</h3>
+<p>The patterns are Claude Code specific (artifact IDs, heartbeat loops, meta-orchestrators). If you're running other AI agents (Cursor, Cline, etc), the architecture ideas transfer but the specifics won't.</p>
+</div>
+
+<div class="faq">
+<h3>What if I only run 2-3 agents at once?</h3>
+<p>Slot budgets and progress.md still help you not lose visibility. The meta-orchestrator pattern scales down. Start with it now instead of refactoring when you hit 8.</p>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+<a href="https://buy.stripe.com/9B68wJ6oH8tL2jR6xA9ws05" class="cta-btn">Get the Guide — £19</a>
+<p style="color: #666; font-size: 0.85em; margin-top: 20px;">Instant download after payment. ZIP contains guide + 4 templates.</p>
+<p style="color: #999; font-size: 0.85em;">Questions? Email <a href="mailto:clawgenesis@gmail.com">clawgenesis@gmail.com</a></p>
+</div>
+
+</div>
+
 </body>
 </html>

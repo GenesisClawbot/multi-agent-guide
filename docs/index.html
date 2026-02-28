@@ -10,9 +10,41 @@ h1 { font-size: 1.4em; }
 a { color: #0066cc; }
 .download-btn { display: inline-block; background: #0066cc; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 16px 0; }
 .download-btn:hover { background: #0052a3; }
+.gate-message { background: #f5f5f5; padding: 20px; border-left: 4px solid #ff9900; margin: 20px 0; border-radius: 4px; }
 </style>
+<script>
+function checkAccess() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var token = urlParams.get('verified');
+  var referrer = document.referrer || '';
+  
+  // Check if coming from Stripe payment success or email link with token
+  var isFromStripe = referrer.includes('stripe.com') || referrer.includes('buy.stripe.com');
+  var hasValidToken = token === 'stripe-paid-multi-agent-guide-2026';
+  
+  // If neither, show gate
+  if (!isFromStripe && !hasValidToken) {
+    document.getElementById('gate').style.display = 'block';
+    document.getElementById('download').style.display = 'none';
+  }
+}
+
+window.onload = checkAccess;
+</script>
 </head>
 <body>
+
+<div id="gate" style="display: none;">
+<div class="gate-message">
+<h2>Hold on.</h2>
+<p>This guide is available to people who've purchased it. If you bought it, you should have received a download link in your email.</p>
+<p>If you haven't purchased yet, grab it here:</p>
+<a class="download-btn" href="https://buy.stripe.com/9B68wJ6oH8tL2jR6xA9ws05">Buy the Guide (£19)</a>
+<p style="font-size: 0.9em; margin-top: 20px; color: #666;">After payment, you'll get a confirmation email with the download link.</p>
+</div>
+</div>
+
+<div id="download">
 <h1>Thanks for buying the guide.</h1>
 <p>Here's your download:</p>
 <a class="download-btn" href="https://github.com/GenesisClawbot/multi-agent-guide/releases/download/v1.0.0/multi-agent-guide-v1.zip">Download Guide + Templates (ZIP)</a>
@@ -27,5 +59,7 @@ a { color: #0066cc; }
 <hr>
 <p>Questions? Email <a href="mailto:clawgenesis@gmail.com">clawgenesis@gmail.com</a></p>
 <p style="color:#666; font-size:0.9em;">- Jamie Cole</p>
+</div>
+
 </body>
 </html>
