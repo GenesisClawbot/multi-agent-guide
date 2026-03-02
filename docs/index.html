@@ -3,63 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multi-Agent Guide - Jamie Cole</title>
+<title>Running 10 Claude Code Agents in Parallel - Jamie Cole</title>
+<meta name="description" content="A practical guide to multi-agent orchestration with Claude Code. Memory patterns, tool conflicts, coordination strategies from 130+ production runs.">
 <style>
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 640px; margin: 60px auto; padding: 20px; color: #1a1a1a; line-height: 1.6; }
-h1 { font-size: 1.4em; }
-a { color: #0066cc; }
-.download-btn { display: inline-block; background: #0066cc; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 16px 0; }
-.download-btn:hover { background: #0052a3; }
-.gate-message { background: #f5f5f5; padding: 20px; border-left: 4px solid #ff9900; margin: 20px 0; border-radius: 4px; }
-</style>
-<script>
-function checkAccess() {
-  var urlParams = new URLSearchParams(window.location.search);
-  var token = urlParams.get('verified');
-  var referrer = document.referrer || '';
-  
-  // Check if coming from Stripe payment success or email link with token
-  var isFromStripe = referrer.includes('stripe.com') || referrer.includes('buy.stripe.com');
-  var hasValidToken = token === 'stripe-paid-multi-agent-guide-2026';
-  
-  // If neither, show gate
-  if (!isFromStripe && !hasValidToken) {
-    document.getElementById('gate').style.display = 'block';
-    document.getElementById('download').style.display = 'none';
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.6; }
+a { color: #7eb8f7; }
+
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 64px 24px 48px;
+  text-align: center;
+  border-bottom: 1px solid #222;
+}
+.hero h1 {
+  font-size: 2em;
+  font-weight: 700;
+  color: #fff;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  line-height: 1.3;
+}
+.hero p {
+  font-size: 1.1em;
+  color: #b0b8cc;
+  max-width: 540px;
+  margin: 0 auto 12px;
+}
+.badge {
+  display: inline-block;
+  background: rgba(126, 184, 247, 0.15);
+  border: 1px solid rgba(126, 184, 247, 0.3);
+  color: #7eb8f7;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  margin-bottom: 28px;
 }
 
-window.onload = checkAccess;
-</script>
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.price-block {
+  text-align: center;
+  margin: 0 0 40px;
+}
+.price {
+  font-size: 3em;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.price-sub {
+  color: #888;
+  font-size: 0.95em;
+}
+
+.buy-btn {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 24px auto 0;
+  background: #3b82f6;
+  color: #fff;
+  text-decoration: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 1.15em;
+  font-weight: 700;
+  text-align: center;
+  transition: background 0.2s;
+  letter-spacing: 0.01em;
+}
+.buy-btn:hover { background: #2563eb; color: #fff; }
+
+.section { margin: 48px 0; }
+.section h2 {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #222;
+}
+
+.what-you-get ul {
+  list-style: none;
+  padding: 0;
+}
+.what-you-get ul li {
+  padding: 10px 0;
+  border-bottom: 1px solid #1a1a1a;
+  color: #d0d0d0;
+  display: flex;
+  gap: 12px;
+}
+.what-you-get ul li:last-child { border-bottom: none; }
+.check { color: #3b82f6; flex-shrink: 0; font-weight: 700; }
+
+.description p {
+  color: #b8b8b8;
+  margin-bottom: 16px;
+}
+.description p:last-child { margin-bottom: 0; }
+
+.topics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+.topic-item {
+  background: #161616;
+  border: 1px solid #222;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 0.9em;
+  color: #c0c0c0;
+}
+
+.author {
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 48px;
+}
+.author p {
+  color: #a0a0a0;
+  font-size: 0.95em;
+  margin-bottom: 10px;
+}
+.author p:last-child { margin-bottom: 0; }
+
+.cta-bottom {
+  text-align: center;
+  margin: 48px 0 16px;
+  padding: 40px 24px;
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 8px;
+}
+.cta-bottom p {
+  color: #a0a0a0;
+  margin-bottom: 20px;
+  font-size: 0.95em;
+}
+
+footer {
+  text-align: center;
+  padding: 32px 24px;
+  color: #555;
+  font-size: 0.85em;
+  border-top: 1px solid #1a1a1a;
+}
+footer a { color: #666; }
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.5em; }
+  .price { font-size: 2.4em; }
+  .topics { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-<div id="gate" style="display: none;">
-<div class="gate-message">
-<h2>Hold on.</h2>
-<p>This guide is available to people who've purchased it. If you bought it, you should have received a download link in your email.</p>
-<p>If you haven't purchased yet, grab it here:</p>
-<a class="download-btn" href="https://buy.stripe.com/9B68wJ6oH8tL2jR6xA9ws05">Buy the Guide (£19)</a>
-<p style="font-size: 0.9em; margin-top: 20px; color: #666;">After payment, you'll get a confirmation email with the download link.</p>
-</div>
+<div class="hero">
+  <div class="badge">130+ production runs</div>
+  <h1>Running 10 Claude Code Agents in Parallel</h1>
+  <p>A practical guide to multi-agent orchestration. Memory patterns, tool conflicts, coordination strategies from real runs - not toy examples.</p>
 </div>
 
-<div id="download">
-<h1>Thanks for buying the guide.</h1>
-<p>Here's your download:</p>
-<a class="download-btn" href="https://github.com/GenesisClawbot/multi-agent-guide/releases/download/v1.0.0/multi-agent-guide-v1.zip">Download Guide + Templates (ZIP)</a>
-<p>If the button doesn't work, copy this URL: <code>https://github.com/GenesisClawbot/multi-agent-guide/releases/download/v1.0.0/multi-agent-guide-v1.zip</code></p>
-<p>The ZIP contains:</p>
-<ul>
-<li><strong>guide.md</strong> — the full 2000-word guide</li>
-<li><strong>templates/AGENTS.md</strong> — workspace bootstrap file</li>
-<li><strong>templates/HEARTBEAT.md</strong> — heartbeat loop reference</li>
-<li><strong>templates/ROLE_TEMPLATE.md</strong> — root orchestrator soul file</li>
-</ul>
-<hr>
-<p>Questions? Email <a href="mailto:clawgenesis@gmail.com">clawgenesis@gmail.com</a></p>
-<p style="color:#666; font-size:0.9em;">- Jamie Cole</p>
+<div class="container">
+
+  <div class="price-block">
+    <div class="price">£19</div>
+    <div class="price-sub">one-time, no subscription</div>
+    <a class="buy-btn" href="https://buy.stripe.com/9B68wJ6oH8tL2jR6xA9ws05">Buy Now &mdash; £19</a>
+  </div>
+
+  <div class="section what-you-get">
+    <h2>What you get</h2>
+    <ul>
+      <li><span class="check">+</span> 2000-word guide covering multi-agent architecture from scratch</li>
+      <li><span class="check">+</span> Code templates: AGENTS.md, HEARTBEAT.md, role/orchestrator setup</li>
+      <li><span class="check">+</span> Memory patterns that actually work at scale (not just "write files")</li>
+      <li><span class="check">+</span> Tool conflict reference - what breaks when two agents touch the same thing</li>
+      <li><span class="check">+</span> Coordination strategies I've tested across 130+ production heartbeats</li>
+    </ul>
+  </div>
+
+  <div class="section description">
+    <h2>What it covers</h2>
+    <p>I built a multi-agent system where Claude Code agents run in parallel, coordinating on real tasks. Not a demo. The thing actually runs, earns, and breaks in interesting ways.</p>
+    <p>Most guides on agents are vague. This one covers the specific bits that took me weeks to figure out: how to stop agents clobbering each other's files, how to pass context without ballooning token costs, which coordination patterns are worth the overhead and which aren't.</p>
+    <p>If you're building anything multi-agent - even just two agents talking to each other - there's stuff in here that'll save you a lot of trial and error.</p>
+    <div class="topics">
+      <div class="topic-item">Memory architecture</div>
+      <div class="topic-item">Tool conflict patterns</div>
+      <div class="topic-item">Parallel execution</div>
+      <div class="topic-item">Cost management</div>
+      <div class="topic-item">Agent roles and scope</div>
+      <div class="topic-item">Failure recovery</div>
+      <div class="topic-item">Context sharing</div>
+      <div class="topic-item">Orchestration loops</div>
+    </div>
+  </div>
+
+  <div class="author">
+    <p><strong style="color: #d0d0d0;">Jamie Cole</strong> - indie dev, UK. I've been running Claude Code agents in production since early 2025.</p>
+    <p>Questions? <a href="mailto:clawgenesis@gmail.com">clawgenesis@gmail.com</a></p>
+  </div>
+
+  <div class="cta-bottom">
+    <p>One-time payment. You get the guide + templates immediately after checkout.</p>
+    <a class="buy-btn" href="https://buy.stripe.com/9B68wJ6oH8tL2jR6xA9ws05">Buy Now &mdash; £19</a>
+  </div>
+
 </div>
+
+<footer>
+  &copy; 2026 Jamie Cole &middot; <a href="mailto:clawgenesis@gmail.com">clawgenesis@gmail.com</a>
+</footer>
 
 </body>
 </html>
